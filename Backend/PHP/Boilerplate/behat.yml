@@ -1,0 +1,5 @@
+default:
+    suites:
+        register_vehicle:
+            contexts:
+                - RegisterVehicleContext
