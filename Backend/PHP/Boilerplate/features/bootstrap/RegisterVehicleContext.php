@@ -3,10 +3,8 @@
 declare(strict_types=1);
 
 use Behat\Behat\Context\Context;
-use Full\App\Command\AddVehicleInFleetCommand;
 use Full\App\Command\CheckVehicleInFleetCommand;
 use Full\App\Command\RegisterVehicleCommand;
-use Full\App\Handler\AddVehicleInFleetHandler;
 use Full\App\Handler\CheckVehicleInFleetHandler;
 use Full\App\Handler\RegisterVehicleHandler;
 use Fulll\Domain\Fleet;
@@ -18,14 +16,6 @@ class RegisterVehicleContext implements Context
     private Vehicle $vehicle;
     private Fleet $anotherFleet;
     private ?string $exceptionMessage = null;
-
-    private RegisterVehicleCommand $registerVehicleCommand;
-    private CheckVehicleInFleetCommand $checkVehicleInFleetCommand;
-    private AddVehicleInFleetCommand $addVehicleInFleetCommand;
-
-    private RegisterVehicleHandler $registerVehicleHandler;
-    private CheckVehicleInFleetHandler $checkVehicleInFleetHandler;
-    private AddVehicleInFleetHandler $addVehicleInFleetHandler;
 
     /**
      * @Given my fleet
@@ -48,8 +38,9 @@ class RegisterVehicleContext implements Context
      */
     public function iRegisterThisVehicleIntoMyFleet()
     {
-        $this->registerVehicleHandler = new RegisterVehicleHandler($this->fleet, $this->vehicle);
-        $this->$registerVehicleHandler->handle($this->registerVehicleHandler);
+        $registerVehicleCommand = new RegisterVehicleCommand($this->myFleet, $this->vehicle);
+        $registerVehicleHandler = new RegisterVehicleHandler();
+        $registerVehicleHandler->handle($registerVehicleCommand);
     }
 
     /**
@@ -57,9 +48,10 @@ class RegisterVehicleContext implements Context
      */
     public function thisVehicleShouldBePartOfMyVehicleFleet()
     {
-        $this->checkVehicleInFleetHandler = new CheckVehicleInFleetHandler($this->myFleet, $this->vehicle);
+        $checkVehicleInFleetCommand = new CheckVehicleInFleetCommand($this->myFleet, $this->vehicle);
+        $checkVehicleInFleetHandler = new CheckVehicleInFleetHandler();
         
-        if (!$this->checkVehicleInFleetHandler->handle($this->checkVehicleInFleetHandler)) {
+        if (!$checkVehicleInFleetHandler->handle($checkVehicleInFleetCommand)) {
             throw new \Exception('Vehicle is not part of the fleet.');
         }
     }
@@ -69,8 +61,9 @@ class RegisterVehicleContext implements Context
      */
     public function iHaveRegisteredThisVehicleIntoMyFleet()
     {
-        $this->registerVehicleHandler = new RegisterVehicleHandler($this->fleet, $this->vehicle);
-        $this->$registerVehicleHandler->handle($this->registerVehicleHandler);
+        $registerVehicleCommand = new RegisterVehicleCommand($this->myFleet, $this->vehicle);
+        $registerVehicleHandler = new RegisterVehicleHandler();
+        $registerVehicleHandler->handle($registerVehicleCommand);
     }
 
     /**
@@ -79,8 +72,8 @@ class RegisterVehicleContext implements Context
     public function iTryToRegisterThisVehicleIntoMyFleet()
     {
         try {
-            $this->registerVehicleHandler = new RegisterVehicleHandler($this->fleet, $this->vehicle);
-            $this->$registerVehicleHandler->handle($this->registerVehicleHandler);
+            $registerVehicleCommand = new RegisterVehicleCommand($this->fleet, $this->vehicle);
+            $registerVehicleHandler->handle($registerVehicleCommand);
         } catch (\Exception $exception) {
             $this->exceptionMessage = $exception->getMessage();
         }
@@ -109,11 +102,10 @@ class RegisterVehicleContext implements Context
      */
     public function thisVehicleHasBeenRegisteredIntoTheOtherUsersFleet()
     {
-        $this->addVehicleInFleetHandler = new AddVehicleInFleetHandler($this->anotherFleet, $this->vehicle);
-        $this->$addVehicleInFleetHandler->handle($this->addVehicleInFleetHandler);
+        $checkVehicleInFleetCommand = new CheckVehicleInFleetCommand($this->anotherFleet, $this->vehicle);
+        $checkVehicleInFleetHandler = new CheckVehicleInFleetHandler();
 
-        $this->checkVehicleInFleetHandler = new CheckVehicleInFleetHandler($this->anotherFleet, $this->vehicle);
-        if (!$this->checkVehicleInFleetHandler->handle($this->checkVehicleInFleetHandler)) {
+        if (!$checkVehicleInFleetHandler->handle($checkVehicleInFleetCommand)) {
             throw new \Exception('Vehicle is not part of the fleet.');
         }
     }
