@@ -6,10 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./PHP/Boilerplate/src:/var/www/html/src
-      - ./PHP/Boilerplate/composer.json:/var/www/html/composer.json
-      - ./PHP/Boilerplate/features:/var/www/html/features
-      - ./PHP/Boilerplate/bin:/var/www/html/bin
+      - ./PHP/Boilerplate:/var/www/html
     ports:
       - "8000:80"
     depends_on:
