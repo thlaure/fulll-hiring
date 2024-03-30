@@ -2,6 +2,21 @@
 
 namespace Full\App\Command;
 
-class RegisterVehicleCommand
+use Fulll\Domain\Fleet;
+use Fulll\Domain\Vehicle;
+
+final readonly class RegisterVehicleCommand
 {
+    public function __construct(private Fleet $fleet, private Vehicle $vehicle)
+    {}
+
+    public function getFleet(): Fleet
+    {
+        return $this->fleet;
+    }
+
+    public function getVehicle(): Vehicle
+    {
+        return $this->vehicle;
+    }
 }
