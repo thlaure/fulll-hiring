@@ -50,10 +50,7 @@ class RegisterVehicleContext implements Context
     {
         $checkVehicleInFleetCommand = new CheckVehicleInFleetCommand($this->myFleet, $this->vehicle);
         $checkVehicleInFleetHandler = new CheckVehicleInFleetHandler();
-        
-        if (!$checkVehicleInFleetHandler->handle($checkVehicleInFleetCommand)) {
-            throw new \Exception('Vehicle is not part of the fleet.');
-        }
+        $checkVehicleInFleetHandler->handle($checkVehicleInFleetCommand);
     }
 
     /**
@@ -103,11 +100,8 @@ class RegisterVehicleContext implements Context
      */
     public function thisVehicleHasBeenRegisteredIntoTheOtherUsersFleet()
     {
-        $checkVehicleInFleetCommand = new CheckVehicleInFleetCommand($this->anotherFleet, $this->vehicle);
-        $checkVehicleInFleetHandler = new CheckVehicleInFleetHandler();
-
-        if (!$checkVehicleInFleetHandler->handle($checkVehicleInFleetCommand)) {
-            throw new \Exception('Vehicle is not part of the fleet.');
-        }
+        $registerVehicleCommand = new RegisterVehicleCommand($this->anotherFleet, $this->vehicle);
+        $registerVehicleHandler = new RegisterVehicleHandler();
+        $registerVehicleHandler->handle($registerVehicleCommand);
     }
 }
