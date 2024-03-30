@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 use Behat\Behat\Context\Context;
-use Full\App\Command\CheckVehicleInFleetCommand;
-use Full\App\Command\RegisterVehicleCommand;
-use Full\App\Handler\CheckVehicleInFleetHandler;
-use Full\App\Handler\RegisterVehicleHandler;
+use Fulll\App\Command\CheckVehicleInFleetCommand;
+use Fulll\App\Command\RegisterVehicleCommand;
+use Fulll\App\Handler\CheckVehicleInFleetHandler;
+use Fulll\App\Handler\RegisterVehicleHandler;
 use Fulll\Domain\Fleet;
 use Fulll\Domain\Vehicle;
 
@@ -72,7 +72,8 @@ class RegisterVehicleContext implements Context
     public function iTryToRegisterThisVehicleIntoMyFleet()
     {
         try {
-            $registerVehicleCommand = new RegisterVehicleCommand($this->fleet, $this->vehicle);
+            $registerVehicleCommand = new RegisterVehicleCommand($this->myFleet, $this->vehicle);
+            $registerVehicleHandler = new RegisterVehicleHandler();
             $registerVehicleHandler->handle($registerVehicleCommand);
         } catch (\Exception $exception) {
             $this->exceptionMessage = $exception->getMessage();

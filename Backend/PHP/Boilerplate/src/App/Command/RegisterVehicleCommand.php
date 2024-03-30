@@ -1,6 +1,6 @@
 <?php
 
-namespace Full\App\Command;
+namespace Fulll\App\Command;
 
 use Fulll\Domain\Fleet;
 use Fulll\Domain\Vehicle;
