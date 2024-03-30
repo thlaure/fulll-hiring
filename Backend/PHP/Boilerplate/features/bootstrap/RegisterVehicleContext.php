@@ -13,6 +13,14 @@ class RegisterVehicleContext implements Context
     private Fleet $anotherFleet;
     private ?string $exceptionMessage = null;
 
+    private RegisterVehicleCommand $registerVehicleCommand;
+    private CheckVehicleInFleetCommand $checkVehicleInFleetCommand;
+    private AddVehicleInFleetCommand $addVehicleInFleetCommand;
+
+    private RegisterVehicleHandler $registerVehicleHandler;
+    private CheckVehicleInFleetHandler $checkVehicleInFleetHandler;
+    private AddVehicleInFleetHandler $addVehicleInFleetHandler;
+
     /**
      * @Given my fleet
      */
@@ -34,7 +42,8 @@ class RegisterVehicleContext implements Context
      */
     public function iRegisterThisVehicleIntoMyFleet()
     {
-        $this->myFleet->addVehicle($this->vehicle);
+        $this->registerVehicleHandler = new RegisterVehicleHandler($this->fleet, $this->vehicle);
+        $this->$registerVehicleHandler->handle($this->registerVehicleHandler);
     }
 
     /**
@@ -42,8 +51,10 @@ class RegisterVehicleContext implements Context
      */
     public function thisVehicleShouldBePartOfMyVehicleFleet()
     {
-        if (!$this->myFleet->hasVehicle($this->vehicle)) {
-            throw new \Exception('Vehicle is not part of my fleet');
+        $this->checkVehicleInFleetHandler = new CheckVehicleInFleetHandler($this->myFleet, $this->vehicle);
+        
+        if (!$this->checkVehicleInFleetHandler->handle($this->checkVehicleInFleetHandler)) {
+            throw new \Exception('Vehicle is not part of the fleet.');
         }
     }
 
@@ -52,7 +63,8 @@ class RegisterVehicleContext implements Context
      */
     public function iHaveRegisteredThisVehicleIntoMyFleet()
     {
-        $this->myFleet->addVehicle($this->vehicle);
+        $this->registerVehicleHandler = new RegisterVehicleHandler($this->fleet, $this->vehicle);
+        $this->$registerVehicleHandler->handle($this->registerVehicleHandler);
     }
 
     /**
@@ -61,7 +73,8 @@ class RegisterVehicleContext implements Context
     public function iTryToRegisterThisVehicleIntoMyFleet()
     {
         try {
-            $this->myFleet->addVehicle($this->vehicle);
+            $this->registerVehicleHandler = new RegisterVehicleHandler($this->fleet, $this->vehicle);
+            $this->$registerVehicleHandler->handle($this->registerVehicleHandler);
         } catch (\Exception $exception) {
             $this->exceptionMessage = $exception->getMessage();
         }
@@ -72,7 +85,6 @@ class RegisterVehicleContext implements Context
      */
     public function iShouldBeInformedThisThisVehicleHasAlreadyBeenRegisteredIntoMyFleet()
     {
-        var_dump($this->exceptionMessage);
         if (!$this->exceptionMessage || strpos($this->exceptionMessage, 'Vehicle is already registered') === false) {
             throw new \Exception('Expected exception message not found.');
         }
@@ -91,8 +103,11 @@ class RegisterVehicleContext implements Context
      */
     public function thisVehicleHasBeenRegisteredIntoTheOtherUsersFleet()
     {
-        $this->anotherFleet->addVehicle($this->vehicle);
-        if (!$this->anotherFleet->hasVehicle($this->vehicle)) {
+        $this->addVehicleInFleetHandler = new AddVehicleInFleetHandler($this->anotherFleet, $this->vehicle);
+        $this->$addVehicleInFleetHandler->handle($this->addVehicleInFleetHandler);
+
+        $this->checkVehicleInFleetHandler = new CheckVehicleInFleetHandler($this->anotherFleet, $this->vehicle);
+        if (!$this->checkVehicleInFleetHandler->handle($this->checkVehicleInFleetHandler)) {
             throw new \Exception('Vehicle is not part of the fleet.');
         }
     }
