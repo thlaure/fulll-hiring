@@ -3,3 +3,6 @@ default:
         register_vehicle:
             contexts:
                 - RegisterVehicleContext
+        park_vehicle:
+            contexts:
+                - ParkVehicleContext
