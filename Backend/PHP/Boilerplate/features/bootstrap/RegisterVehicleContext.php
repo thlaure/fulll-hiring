@@ -3,6 +3,12 @@
 declare(strict_types=1);
 
 use Behat\Behat\Context\Context;
+use Full\App\Command\AddVehicleInFleetCommand;
+use Full\App\Command\CheckVehicleInFleetCommand;
+use Full\App\Command\RegisterVehicleCommand;
+use Full\App\Handler\AddVehicleInFleetHandler;
+use Full\App\Handler\CheckVehicleInFleetHandler;
+use Full\App\Handler\RegisterVehicleHandler;
 use Fulll\Domain\Fleet;
 use Fulll\Domain\Vehicle;
 
